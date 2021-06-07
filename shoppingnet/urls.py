@@ -14,16 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from shoppingnet.settings import MEDIA_ROOT, DEBUG
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('goods.urls'))
+    path('',include('goods.urls')),
+    path('user/',include('userapp.urls'))
 ]
 
 
 if DEBUG:
     from django.views.static import serve
-    urlpatterns.append(path('media/(.*)',serve,kwargs={'document_root':MEDIA_ROOT}))
+    urlpatterns.append(re_path('^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT }))
