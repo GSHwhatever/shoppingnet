@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
+
 {% block title %}商品详情页{% endblock %}
+
 
 {% block main %}
 
@@ -39,14 +41,17 @@
                 <div class="color">
                     <p class="p-item">颜色：</p>
                     <ul class="MinImgList">
-
                         {% for color in goods.getColors %}
 
-                             <li class="MinImg {% if forloop.first %}active{% endif %}" colorid="{{ color.id }}">
+                            <li class="MinImg  {% if forloop.first %}active{% endif %}" colorid="{{ color.id }}">
                                 <img src="{{ color.colorurl }}" width="30px" height="30px">
-                             </li>
+                            </li>
 
                         {% endfor %}
+
+
+
+
 
                     </ul>
                 </div>
@@ -55,11 +60,8 @@
                         尺码：
                     </p>
                     <ul class="size-list">
-
                         {% for size in goods.getSizeList %}
-
-                            <li sizeid="{{ size.id }}" class="size-item {% if forloop.first %}active{% endif %}">{{ size.sname }}</li>
-
+                            <li sizeid="{{ size.id }}" class="size-item  {% if forloop.first %}active{% endif %}">{{ size.sname }}</li>
                         {% endfor %}
 
                     </ul>
@@ -72,14 +74,14 @@
                     <input type="number" name="" value="1">
                     <div class="jia">+</div>
                 </div>
-              <form action="http://127.0.0.1:8000/cart/" method="post">
+              <form action="/cart/" method="post">
                     <input name="colorid" type="hidden">
-                    <input name="goodsid" type="hidden" value="4">
+                    <input name="goodsid" type="hidden" value="{{ goods.id }}">
                     <input name="sizeid" type="hidden">
                     <input name="count" type="hidden">
-                    <input name="type" value="add" type="hidden">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="QYciumFpuMt1tAzw4HyUsSbgralhP9ykf6fRRkLbNhqtrzI6FElzKnFZdIenh6pT">
-                    <button class="male" onclick="goCart()">单独购买</button>
+                    <input name="flag" value="add" type="hidden">
+                    {% csrf_token %}
+                    <button class="male" onclick="goCart();">单独购买</button>
               </form>
             </div>
          <div class="detail-con-nav">
@@ -99,23 +101,34 @@
     </div>
     <div class="zhanshi">
 
-        {% for gdname,gdurlList in goods.getDetaiList.items %}
+        {% for gdname,gdurlList in goods.getDetailList.items %}
+
 
             <div class="zhanshi-model">
                 <p>{{ gdname }}</p>
                 <div class="line"></div>
-
                 {% for gdurl in gdurlList %}
-
                     <img src="{{ gdurl }}" alt="">
-
                 {% endfor %}
 
             </div>
 
         {% endfor %}
 
+
+
+
+
+
+
+
+
+
+
+        </div>
     </div>
+        </div>
+
 
     <div class="goods-model" style="margin-right: -18px;text-align: center">
         <img src="/static/recommend.png" style="position: relative;left: -10px;top: 10px">
@@ -125,28 +138,41 @@
             {% for recommend in recommendList %}
 
                 <div class="good">
-                        <a href="/goodsdetails/{{ recommend.id }}">
-                            <img src="{{ recommend.getGImg }}" width="285px" height="285px">
-                            <p class="name">{{ recommend.gname }}</p>
-                            <div class="price">
-                                <i>￥</i>
-                                <p class="big">{{ recommend.price }}</p>
-                                <s>￥{{ recommend.oldprice }}</s>
-                            </div>
-                            <div class="sale">
-                                特卖
-                            </div>
-                        </a>
-                    </div>
+                    <a href="/goodsdetails/{{ recommend.id }}">
+                        <img src="{{ recommend.getGImg }}" width="285px" height="285px">
+                        <p class="name">{{ recommend.gname }}</p>
+                        <div class="price">
+                            <i>￥</i>
+                            <p class="big">{{ recommend.price }}</p>
+                            <s>￥{{ recommend.oldprice }}</s>
+                        </div>
+                        <div class="sale">
+                            特卖
+                        </div>
+                    </a>
+                </div>
 
             {% endfor %}
+
+
+
+
+
+
+
+
 
         </div>
     </div>
 
 {% endblock %}
 
+
 {% block footerjs %}
+
+
+
+
 
         <script>
         $('.MinImg').click(function () {
@@ -178,12 +204,17 @@
         function goCart() {
 
             //<li class="MinImgactive" colorid="11"></li>
-            $('form').children('input[name="colorid"]').val($('.MinImg.active').attr('colorid'))
-            $('form').children('input[name="sizeid"]').val($('.size-item.active').attr('sizeid'))
-            $('form').children('input[name="count"]').val($('.num').children('input[type="number"]').val())
+            $('form').children('input[name="colorid"]').val($('.MinImg.active').attr('colorid'));
+            $('form').children('input[name="sizeid"]').val($('.size-item.active').attr('sizeid'));
+            $('form').children('input[name="count"]').val($('.num').children('input[type="number"]').val());
+
+
 
 
         }
     </script>
+
+
+
 
 {% endblock %}
